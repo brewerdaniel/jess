@@ -1,0 +1,294 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}JESS Demo{% endblock %}
+
+{% block metas %}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{url_for('.static', filename='css/bootstrap.min.css')}}">
+<link rel="stylesheet" href="{{url_for('.static', filename='css/dashboard.css')}}">
+
+<style>
+.loader {
+  display: inline-block;
+  border: 5px solid #f3f3f3; /* Light grey */
+  border-top: 5px solid #2c2c2c; /* Blue */
+  border-radius: 50%;
+  margin-top: 3em;
+  margin-bottom: 3em;
+  width: 4em;
+  height: 4em;
+  animation: spin 2s linear infinite;
+  text-align: center;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+  <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">JESS Demo Interface</a>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+      <div class="sidebar-sticky">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link" href="/whoswho">
+              <span data-feather="clock"></span>
+              Who's who?
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/transactions">
+              <span data-feather="database"></span>
+              Transactions
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+  <h1 class="h2" style="padding-top: 1.5em;">Who's who?</h1>
+  <p>JESS can ingest an <strong>encoded form</strong> of the following piece of text, understand it then apply rules on it to derive a specific response to a question.</p>
+  <div class="row">
+    <div class="col-sm-4">
+      <h5>Input text</h5>
+      <p><i>The Englishman lives in the red house.  The Spaniard owns the dog.
+        The ivory house is immediately to the left of the green house, where
+        the coffee drinker lives.  The milk drinker lives in the middle house.
+        The man who smokes Old Golds also keeps snails.  The Ukrainian drinks
+        tea.  The Norwegian resides in the first house on the left.  The
+        Chesterfields smoker lives next door to the fox owner.  The Lucky
+        Strike smoker drinks orange juice.  The Japanese smokes Parliaments.
+        The horse owner lives next to the Kools smoker, whose house is yellow.
+        The Norwegian lives next to the blue house.</i></p>
+      <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
+          Show JESS encoding
+      </button>
+    </div>
+    
+    <div class="col-sm-8">
+      <h5>Questions</h5>
+      <form>
+          <div class="form-row align-items-center">
+            <div class="col-auto">
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">Who's house is </div>
+                </div>
+                <select id="which-colour" name="colour" class="custom-select">
+                    <option selected disabled>colour</option>
+                    <option value="yellow">yellow</option>
+                    <option value="blue">blue</option>
+                    <option value="red">red</option>
+                    <option value="ivory">ivory</option>
+                    <option value="green">green</option>
+                  </select>
+              </div>
+            </div>
+            <div class="col-auto">
+              <button id="colour" type="submit" class="btn btn-primary mb-2 question">Submit</button>
+            </div>
+          </div>
+        </form>
+
+        <form>
+            <div class="form-row align-items-center">
+              <div class="col-auto">
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">What is drunk by the </div>
+                  </div>
+                  <select id="which-nationality" name="nationality" class="custom-select">
+                      <option selected disabled>person</option>
+                      <option value="norwegian">norwegian</option>
+                      <option value="ukrainian">ukrainian</option>
+                      <option value="englishman">englishman</option>
+                      <option value="spaniard">spaniard</option>
+                      <option value="japanese">japanese</option>
+                    </select>
+                </div>
+              </div>
+              <div class="col-auto">
+                <button id="nationality" type="submit" class="btn btn-primary mb-2 question">Submit</button>
+              </div>
+            </div>
+          </form>
+
+          <form>
+              <div class="form-row align-items-center">
+                <div class="col-auto">
+                  <label class="sr-only" for="inlineFormInputGroup">Username</label>
+                  <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">Who has a pet </div>
+                    </div>
+                    <select id="which-pet" name="pet" class="custom-select">
+                        <option selected disabled>creature</option>
+                        <option value="fox">fox</option>
+                        <option value="horse">horse</option>
+                        <option value="snails">snail</option>
+                        <option value="dog">dog</option>
+                        <option value="zebra">zebra</option>
+
+                      </select>
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <button id="pet" type="submit" class="btn btn-primary mb-2 question">Submit</button>
+                </div>
+              </div>
+            </form>
+
+            <form>
+                <div class="form-row align-items-center">
+                  <div class="col-auto">
+                    <label class="sr-only" for="inlineFormInputGroup">Username</label>
+                    <div class="input-group mb-2">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">Who's favourite type of cigarettes is </div>
+                      </div>
+                      <select id="which-smokes" name="smokes" class="custom-select">
+                          <option selected disabled>smokes</option>
+                          <option value="kools">Kools</option>
+                          <option value="chesterfields">Chesterfields</option>
+                          <option value="old-golds">Old Golds</option>
+                          <option value="lucky-strikes">Lucky Strikes</option>
+                          <option value="parliaments">Parliaments</option>
+                        </select>
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <button id="smokes" type="submit" class="btn btn-primary mb-2 question">Submit</button>
+                  </div>
+                </div>
+              </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12" style="text-align: center; vertical-align: middle; height:5em; ">
+      <h5>Response</h5>
+      <div style="display: none;" class="loader"></div>
+      <p id="response" style="font-size: 5em;"><i>Please ask a question!</i></p>
+    </div>
+  </div>
+
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+              <h4 class="modal-title" id="myModalLabel">JESS Encoding</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              
+          </div>
+          <div class="modal-body">
+            <code>(defrule find-solution
+                (avh (a nationality) (v englishman) (h ?n1))
+                (avh (a color) (v red) (h ?c1&?n1))
+                (avh (a nationality) (v spaniard) (h ?n2&~?n1))
+                (avh (a pet) (v dog) (h ?p1&?n2))
+                (avh (a color) (v ivory) (h ?c2&~?c1))
+                (avh (a color) (v green) (h ?c3&~?c2&~?c1&:(= (+ ?c2 1) ?c3)))
+                (avh (a drink) (v coffee) (h ?d1&?c3))
+                (avh (a drink) (v milk) (h ?d2&~?d1&3))
+                (avh (a smokes) (v old-golds) (h ?s1))
+                (avh (a pet) (v snails) (h ?p2&~?p1&?s1))
+                (avh (a nationality) (v ukrainian) (h ?n3&~?n2&~?n1))
+                (avh (a drink) (v tea) (h ?d3&~?d2&~?d1&?n3))
+                (avh (a nationality) (v norwegian) (h ?n4&~?n3&~?n2&~?n1&1))
+                (avh (a smokes) (v chesterfields) (h ?s2&~?s1))
+                (avh (a pet) (v fox) (h ?p3&~?p2&~?p1&:(or (= ?s2 (- ?p3 1)) (= ?s2 (+ ?p3 1)))))
+                (avh (a smokes) (v lucky-strikes) (h ?s3&~?s2&~?s1))
+                (avh (a drink) (v orange-juice) (h ?d4&~?d3&~?d2&~?d1&?s3)) 
+                (avh (a nationality) (v japanese) (h ?n5&~?n4&~?n3&~?n2&~?n1))
+                (avh (a smokes) (v parliaments) (h ?s4&~?s3&~?s2&~?s1&?n5))
+                (avh (a pet) (v horse) (h ?p4&~?p3&~?p2&~?p1))
+                (avh (a smokes) (v kools) (h ?s5&~?s4&~?s3&~?s2&~?s1&:(or (= ?p4 (- ?s5 1)) (= ?p4 (+ ?s5 1)))))
+                (avh (a color) (v yellow) (h ?c4&~?c3&~?c2&~?c1&?s5))
+                (avh (a color) (v blue) (h ?c5&~?c4&~?c3&~?c2&~?c1&:(or (= ?c5 (- ?n4 1)) (= ?c5 (+ ?n4 1)))))
+                (avh (a drink) (v water) (h ?d5&~?d4&~?d3&~?d2&~?d1))
+                (avh (a pet) (v zebra) (h ?p5&~?p4&~?p3&~?p2&~?p1))
+                =>
+                (assert (solution nationality englishman ?n1)
+                        (solution nationality spaniard ?n2)
+                        (solution nationality ukrainian ?n3)
+                        (solution nationality norwegian ?n4)
+                        (solution nationality japanese ?n5)
+                        (solution color red ?c1)
+                        (solution color ivory ?c2)
+                        (solution color green ?c3)
+                        (solution color yellow ?c4)
+                        (solution color blue ?c5)
+                        (solution pet dog ?p1)
+                        (solution pet snails ?p2)
+                        (solution pet fox ?p3)
+                        (solution pet horse ?p4)
+                        (solution pet zebra ?p5)
+                        (solution drink coffee ?d1)
+                        (solution drink milk ?d2)
+                        (solution drink tea ?d3)
+                        (solution drink orange-juice ?d4)
+                        (solution drink water ?d5)
+                        (solution smokes old-golds ?s1)
+                        (solution smokes chesterfields ?s2)
+                        (solution smokes lucky-strikes ?s3)
+                        (solution smokes parliaments ?s4)
+                        (solution smokes kools ?s5)
+                    )
+                )
+              
+            </code>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{url_for('.static', filename='js/jquery-3.4.1.min.js')}}"></script>
+<script src="{{url_for('.static', filename='js/bootstrap.min.js')}}"></script>
+<script type=text/javascript>
+$(function() {
+  $('button.question').bind('click', function(e) {
+    e.preventDefault();
+    $('div.loader').css("display", function() {
+      $('#response').css("display", "none");
+      return "inline-block"
+    });
+    $.getJSON('/' + e.currentTarget.id, {
+      value: $('select#which-' + e.currentTarget.id).val()
+    }, function(data) {
+      window.setTimeout(function () {
+        $('div.loader').css("display", function() {
+          $('#response').text(data);
+          $('#response').css("display", "inline-block");
+          return "none"
+        });
+      }, 500);
+    });
+  });
+});
+</script>
+{% endblock %}

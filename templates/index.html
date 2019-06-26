@@ -1,0 +1,53 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}JESS Demo{% endblock %}
+
+{% block metas %}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{url_for('.static', filename='css/bootstrap.min.css')}}">
+<link rel="stylesheet" href="{{url_for('.static', filename='css/dashboard.css')}}">
+{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+  <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">JESS Demo Interface</a>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+      <div class="sidebar-sticky">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link" href="/whoswho">
+              <span data-feather="clock"></span>
+              Who's who?
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/transactions">
+              <span data-feather="database"></span>
+              Transactions
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+  <h1 class="h2" style="padding-top: 1.5em;">JESS</h1>
+  <p>This demonstration is to show what JESS is, where a capability like JESS can be applied and how it is best applied.</p>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{url_for('.static', filename='js/jquery-3.4.1.min.js')}}"></script>
+<script src="{{url_for('.static', filename='js/bootstrap.min.js')}}"></script>
+{% endblock %}

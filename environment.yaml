@@ -1,0 +1,10 @@
+name: jess-gui
+dependencies:
+  - python
+  - flask
+  - python-dateutil
+  - requests
+  - pip:
+    - flask-bootstrap
+    - pylint
+    - pep8
